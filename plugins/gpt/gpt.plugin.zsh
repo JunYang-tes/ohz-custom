@@ -71,4 +71,7 @@ function _preexec() {
   fi
 }
 
+bindkey -s '^t^u' ',翻译为英文:'
+bindkey -s '^t^h' ',Translate to Chinese:'
+bindkey "^x" backward-kill-line
 add-zsh-hook preexec _preexec
