@@ -29,11 +29,11 @@ function is_question() {
 log_file=/tmp/gpt.log
 function write_log() {
   local msg=$1
-  echo $msg >> $log_file
+  echo -E $msg >> $log_file
 }
 
 function ask_gpt() {
-  local p="I'll ask you a linux command or some questions about linux. If I asked a linux command, you should only response a command without any explainations. The response format for command is \"cmd: <command content>\", the response format for others is \"exp: <content\". Now I am asking you: $*"
+  local p="I'll ask you a linux command or some questions. If I asked a linux command, you should only response a command without any explainations. The response format for command is \"cmd: <command content>\", the response format for others is \"exp: <content\". Now I am asking you: $*"
   local data=$(jq  -n --arg p "$p" '{"model": "gpt-3.5-turbo","messages": [{"role": "user", "content":$p}],"temperature": 0.7}')
   local resp=$(curl https://api.openai.com/v1/chat/completions -s \
    -H "Content-Type: application/json" \
@@ -41,7 +41,7 @@ function ask_gpt() {
    -d $data) #"{\"model\": \"gpt-3.5-turbo\",\"messages\": [{\"role\": \"user\", \"content\":$p}],\"temperature\": 0.7}")
   write_log "Request: $data"
   write_log "Response: $resp"
-  echo $resp | jq '.choices[0].message.content' -r
+  echo -E $resp | jq '.choices[0].message.content' -r
 }
 
 function command_not_found_handler() {
